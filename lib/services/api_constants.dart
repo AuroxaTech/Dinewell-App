@@ -1,0 +1,30 @@
+class ApiConstants{
+  static final login = "/member/login";
+  static final logout = "/member/logout";
+  static final register = "/member/register";
+  static final allCards = "/member/all-cards";
+  static final profileDetails = "/member/details";
+  static final updateProfile = "/member/account/update";
+  static final banners = "/banners";
+  static final allPartners = "/member/all-partners";
+  static final partnerDetails = "/member/partner/details/";
+  static final countryList = "/country-list";
+  static final languagesList = "/language-list";
+  static final transactionsCards = "/member/transacted-cards";
+  static final balance = "/member/balance/";
+  static final rules = "/member/rule/";
+  static final offers = "/member/offers/";
+  static final transactions = "/member/transactions/";
+  static final productsList = "/member/manage/product";
+  static final ordersList = "/member/orders/";
+  static final rewardsList = "/member/rewards/";
+  static final aboutUs = "/about-us";
+  static final contactUs = "/send-contact";
+  static final locationWiseSearch = "/member/all-partners?";
+  static final notificationList = "/member/notifications";
+  static final readNotification = "/member/read-notification";
+  static final sendOTP = "/member/send-otp";
+  static final verifiedOTP = "/member/otp/process";
+  static final checkPoints = "member/check-points";
+  static final requestQrCode = "member/qr/point-request";
+}

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "714092055764",
+    "project_id": "dinewell-2f574",
+    "storage_bucket": "dinewell-2f574.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714092055764:android:725a72e1283ce30faeff41",
+        "android_client_info": {
+          "package_name": "ca.dinewell"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPXMmQx7ublnJKMLwAznjvBedFFKyoBmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:714092055764:android:4968cf92149fd151aeff41",
+        "android_client_info": {
+          "package_name": "com.dinewell"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPXMmQx7ublnJKMLwAznjvBedFFKyoBmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
