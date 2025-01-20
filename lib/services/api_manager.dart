@@ -207,16 +207,32 @@ class ApiManager {
   Future<List<CardListData>?> getAllCards() async {
     try {
       String? authToken =
-          LocalStorageService.prefs?.getString(ConstanceData.userAuthToken) ??
-              "";
+          LocalStorageService.prefs?.getString(ConstanceData.userAuthToken) ?? "";
       print("Fetching cards with authToken: $authToken");
-      var response =
-          await ApiService(token: authToken, contentType: ContentType.json)
-              .get(ApiConstants.allCards);
+
+      var response = await ApiService(token: authToken, contentType: ContentType.json)
+          .get(ApiConstants.allCards);
+      print("Raw API Response: ${response?.data}");
+
       if (response?.data != null) {
         final newList = json.encode(response?.data);
+        print("Encoded JSON: $newList");
+
         final extractedData = json.decode(newList);
+        print("Decoded JSON: $extractedData");
+
         var cardsData = AllCardsListModel.fromJson(extractedData);
+        print("Parsed CardsData: ${cardsData.toJson()}"); // Assuming you have toJson method
+        print("Success: ${cardsData.success}");
+        print("Data Length: ${cardsData.data?.length}");
+
+        if (cardsData.data != null) {
+          print("Individual Cards:");
+          for (var card in cardsData.data!) {
+            print("Card: ${card.toJson()}"); // Assuming CardListData has toJson method
+          }
+        }
+
         if (cardsData.success == true) {
           return cardsData.data;
         } else {
@@ -271,22 +287,37 @@ class ApiManager {
   Future<List<AllPartnersListData>?> getAllPartners() async {
     try {
       String? authToken =
-          LocalStorageService.prefs?.getString(ConstanceData.userAuthToken) ??
-              "";
+          LocalStorageService.prefs?.getString(ConstanceData.userAuthToken) ?? "";
       print("Fetching partners with authToken: $authToken");
 
-      var response =
-          await ApiService(token: authToken).get(ApiConstants.allPartners);
+      var response = await ApiService(token: authToken).get(ApiConstants.allPartners);
       if (response?.data != null) {
+        print("\n=== Full API Response ===");
+        print(json.encode(response?.data));  // Print raw API response
+
         final newList = json.encode(response?.data);
         final extractedData = json.decode(newList);
         var partnersData = AllPartnersListModel.fromJson(extractedData);
-        if (partnersData.success == true) {
+
+        if (partnersData.success == true && partnersData.data != null) {
+          print("\n=== All Partners Data ===");
+          print(json.encode(partnersData.data));  // Print full partners list
+
+          // Print individual partner details
+          print("\n=== Individual Partner Details ===");
+          for (var partner in partnersData.data!) {
+            print("\nPartner:");
+            print(json.encode(partner.toJson()));  // Prints all fields of each partner
+            print("------------------------");
+          }
+
           return partnersData.data;
         } else {
+          print("No partners found or success is false");
           return null;
         }
       } else {
+        print("Response data is null");
         return null;
       }
     } catch (e) {
@@ -613,33 +644,51 @@ class ApiManager {
   }
 
 // fetch all rewards
-  Future<List<RewardsListData>?> getRewardsList(
-      {required String cardId}) async {
-    print("Card Id ==>$cardId");
+  Future<List<RewardsListData>?> getRewardsList({required String cardId}) async {
+    print("Card Id ==> $cardId");
     try {
-      String? authToken =
-          LocalStorageService.prefs?.getString(ConstanceData.userAuthToken) ??
-              "";
-      var response =
-          await ApiService(token: authToken, contentType: ContentType.json)
-              .get("${ApiConstants.rewardsList}${cardId}");
-      final newList = json.encode(response?.data);
-      final extractedData = json.decode(newList);
-      var rewardsData = RewardsListModel.fromJson(extractedData);
-      if (response?.data != null) {
+      String? authToken = LocalStorageService.prefs?.getString(ConstanceData.userAuthToken) ?? "";
+      print("Auth Token: $authToken");
+
+      var response = await ApiService(
+        token: authToken,
+        contentType: ContentType.json,
+      ).get("${ApiConstants.rewardsList}$cardId");
+
+      print("Response Status Code: ${response?.statusCode}");
+      print("Type of response.data: ${response?.data.runtimeType}");
+      print("API Response Data: ${response?.data}");
+
+      // Check if response is valid JSON (Map)
+      if (response?.data != null && response!.data is Map<String, dynamic>) {
+        var rewardsData = RewardsListModel.fromJson(response.data as Map<String, dynamic>);
         if (rewardsData.success == true) {
           return rewardsData.data;
         } else {
+          print("API returned success = false with message: ${rewardsData.message}");
           return null;
         }
       } else {
+        // Handle unexpected response formats
+        if (response?.data is String) {
+          String responseBody = response!.data as String;
+          if (responseBody.startsWith('<!DOCTYPE html>')) {
+            print("Received HTML content instead of JSON.");
+          } else {
+            print("Received a string response: $responseBody");
+          }
+        } else {
+          print("Unexpected API response format.");
+        }
         return null;
       }
     } catch (e) {
-      print("getRewardsList Error ===>${e.toString()} ");
+      print("getRewardsList Error ===> ${e.toString()}");
       rethrow;
     }
   }
+
+
 
 // fetch About us
   Future<AboutUsData?> getAboutUs() async {
@@ -649,9 +698,9 @@ class ApiManager {
               "";
       var response =
           await ApiService(token: authToken, contentType: ContentType.json)
-              .get("${ApiConstants.aboutUs}");
+              .get(ApiConstants.aboutUs);
       final newList = json.encode(response?.data);
-      print("about us data: ${newList}");
+      print("about us data: $newList");
       final extractedData = json.decode(newList);
       var aboutUsData = AboutUsModel.fromJson(extractedData);
       if (response?.data != null) {

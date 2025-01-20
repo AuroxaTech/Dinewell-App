@@ -445,22 +445,53 @@ class _RestaurantTabScreenState extends State<RestaurantTabScreen>
   }
 
   apiGetAllPartners() async {
-    if (latitude == null || longitude == null) {
-      return;
-    }
     if (mounted) {
       partnersList.clear();
-      await ApiManager().getAllPartners().then((value) {
-        partnersList = value?.where((partner) {
-          double? partnerLat = double.tryParse(partner.latitude ?? "0");
-          double? partnerLng = double.tryParse(partner.longitude ?? "0");
-          return partnerLat != null &&
-              partnerLng != null &&
-              Geolocator.distanceBetween(latitude!, longitude!, partnerLat, partnerLng) <=
-                  5000; // 5 km radius
-        }).toList() ?? [];
-        setState(() {});
-      });
+      try {
+        final value = await ApiManager().getAllPartners();
+        if (value != null) {
+          // Print fetched data length
+          print("Total partners fetched: ${value.length}");
+
+          if (latitude == null || longitude == null) {
+            // If no location, show all partners
+            partnersList = value;
+          } else {
+            // Filter by location
+            partnersList = value.where((partner) {
+              // Check if partner has valid coordinates
+              if (partner.latitude == null || partner.latitude!.isEmpty ||
+                  partner.longitude == null || partner.longitude!.isEmpty) {
+                return true; // Include partners without location
+              }
+
+              try {
+                double partnerLat = double.parse(partner.latitude!);
+                double partnerLng = double.parse(partner.longitude!);
+
+                double distance = Geolocator.distanceBetween(
+                    latitude!,
+                    longitude!,
+                    partnerLat,
+                    partnerLng
+                );
+
+                print("Partner: ${partner.name}, Distance: ${distance/1000} km");
+
+                return distance <= 5000; // 5 km radius
+              } catch (e) {
+                print("Error calculating distance for ${partner.name}: $e");
+                return true; // Include partners with invalid coordinates
+              }
+            }).toList();
+          }
+
+          print("Filtered partners count: ${partnersList.length}");
+          setState(() {});
+        }
+      } catch (e) {
+        print("Error in apiGetAllPartners: $e");
+      }
     }
   }
 
