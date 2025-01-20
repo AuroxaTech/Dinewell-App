@@ -3,17 +3,17 @@ class RewardsListModel {
       this.success, 
       this.message, 
       this.data,});
-
-  RewardsListModel.fromJson(dynamic json) {
+  RewardsListModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
-    if (json['data'] != null) {
+    if (json['data'] != null && json['data'] is List) {
       data = [];
       json['data'].forEach((v) {
         data?.add(RewardsListData.fromJson(v));
       });
     }
   }
+
   bool? success;
   String? message;
   List<RewardsListData>? data;
@@ -27,41 +27,45 @@ class RewardsListModel {
     }
     return map;
   }
-
 }
 
 class RewardsListData {
   RewardsListData({
-      this.id, 
-      this.name, 
-      this.title, 
-      this.description, 
-      this.maxNumberToRedeem, 
-      this.points, 
-      this.activeFrom, 
-      this.expirationDate, 
-      this.isActive, 
-      this.numberOfTimesRedeemed, 
-      this.views, 
-      this.lastView, 
-      this.isUndeletable, 
-      this.isUneditable, 
-      this.meta, 
-      this.createdBy, 
-      this.deletedBy, 
-      this.updatedBy, 
-      this.deletedAt, 
-      this.createdAt, 
-      this.updatedAt, 
-      this.image1, 
-      this.pivot, 
-      this.media,});
+    this.id,
+    this.name,
+    this.title,
+    this.description,
+    this.maxNumberToRedeem,
+    this.points,
+    this.activeFrom,
+    this.expirationDate,
+    this.isActive,
+    this.numberOfTimesRedeemed,
+    this.views,
+    this.lastView,
+    this.isUndeletable,
+    this.isUneditable,
+    this.meta,
+    this.createdBy,
+    this.deletedBy,
+    this.updatedBy,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.image1,
+    this.pivot,
+    this.media,
+  });
 
-  RewardsListData.fromJson(dynamic json) {
+  RewardsListData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    title = json['title'] != null ? Title.fromJson(json['title']) : null;
-    description = json['description'] != null ? Description.fromJson(json['description']) : null;
+    title = json['title'] != null
+        ? Title.fromJson(json['title'] as Map<String, dynamic>)
+        : null;
+    description = json['description'] != null
+        ? Description.fromJson(json['description'] as Map<String, dynamic>)
+        : null;
     maxNumberToRedeem = json['max_number_to_redeem'];
     points = json['points'];
     activeFrom = json['active_from'];
@@ -80,14 +84,17 @@ class RewardsListData {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     image1 = json['image1'];
-    pivot = json['pivot'] != null ? Pivot.fromJson(json['pivot']) : null;
-    if (json['media'] != null) {
+    pivot = json['pivot'] != null
+        ? Pivot.fromJson(json['pivot'] as Map<String, dynamic>)
+        : null;
+    if (json['media'] != null && json['media'] is List) {
       media = [];
       json['media'].forEach((v) {
-        media?.add(Media.fromJson(v));
+        media?.add(Media.fromJson(v as Map<String, dynamic>));
       });
     }
   }
+
   String? id;
   String? name;
   Title? title;
@@ -149,9 +156,7 @@ class RewardsListData {
     }
     return map;
   }
-
 }
-
 class Media {
   Media({
       this.id, 

@@ -732,13 +732,29 @@ class _OrdersScreenState extends State<OrdersScreen>
   }
 
   apiOrdersList() async {
-    String cardsId = cardId ?? cardsList[0].id ?? "";
-    setState(() {});
-    ordersList.clear();
-    await ApiManager().getOrdersList(cardId: cardsId).then((value) {
-      ordersList = value ?? [];
+    String cardsId = "";
+
+    // Safely get card ID
+    if (cardId != null) {
+      cardsId = cardId!;
+    } else if (cardsList.isNotEmpty) {
+      cardsId = cardsList[0].id ?? "";
+    }
+
+    // Only proceed if we have a valid card ID
+    if (cardsId.isNotEmpty) {
       setState(() {});
-    });
+      ordersList.clear();
+
+      await ApiManager().getOrdersList(cardId: cardsId).then((value) {
+        ordersList = value ?? [];
+        setState(() {});
+      });
+    } else {
+      print("No valid card ID available");
+      ordersList.clear();
+      setState(() {});
+    }
   }
 
   apiGetUserDetails() {

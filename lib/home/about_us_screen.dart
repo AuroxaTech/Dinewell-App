@@ -64,7 +64,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Image.asset(ConstanceData.appIcon, height: 60),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                             Text(
